@@ -1,0 +1,131 @@
+body{
+  /* background-color: #5CED7B; */
+  background-color: #3FE196;
+  /* font-family:monospace; */
+  /* font-size: 2.5em; */
+  margin: 0;
+  padding:0px;
+
+}
+
+/* fonts */
+.orbitron-bold {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.protest-revolution-regular {
+  font-family: "Protest Revolution", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.jersey-10-regular {
+  font-family: "Jersey 10", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 10px;
+}
+
+.welcomeheader {
+  /* === Positioning === */
+  position: fixed;        /* Pins the element to a fixed position in the viewport (stays on screen while scrolling) */
+  top: 15px;                 /* Aligns the element to the top edge of the screen */
+  left: 15px;                /* Aligns the element to the left edge of the screen */
+
+  /* === Box Model === */
+  padding: 5px;          /* Adds space inside the element between content and border */
+  margin: 0 auto;
+  box-sizing: content-box; /* Default behavior: padding and border are NOT included in width/height */
+  width: fit-content;     /* Element width shrinks or grows to fit its content */
+
+  /* === Text & Font === */
+  font-size: 2em;         /* Enlarges the font to 2 times the default size */
+  text-align: center;     /* Centers the text horizontally within the element */
+
+  /* === Background === */
+  background-color: #5cedc4;  /* Sets a light green/blue background color */
+  /* background-color: #3FE196; */  /* Alternate green background (commented out) */
+  /* background-position: top; */   /* Would align background image to the top (not used here) */
+  /* background: url(); */          /* Placeholder for background image URL */
+}
+
+.welcomeheader h1 {
+  /* margin-bottom: 0px; */
+}
+
+.welcomeheader h5 {
+  /* margin-top: 25px; */
+}
+
+
+.headerborder {
+  /* border */
+  border: solid;
+  border-radius: 50px;
+  border-color: tomato;
+  border-width: 15px;
+}
+
+.contentheader {
+  /* Background */
+  background-color: #5cedc4;
+  /* background-color: #3FE196; */
+
+  /* Positioning */
+  position: fixed;
+  right: 0;
+  top: 0;
+  
+
+  /* Box Model */
+  padding: 10px;
+  margin: 15px;
+  box-sizing: content-box;
+  width: fit-content;
+
+  /* Text */
+  font-size: 1em;
+  text-align: center;
+}
+
+.contentborder {
+  /* border */
+  border: solid;
+  border-radius: 50px;
+  border-color: tomato;
+  border-width: 5px;
+}
+
+.contentbutton {
+  display:inline-block;
+  background-color: whitesmoke;
+  text-decoration: none; /* ✅ removes underline */
+  color: black;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+  padding: 5px;          /* Adds space inside the element between content and border */
+  margin-top: 1px;           /* Adds space outside the element, separating it from others */
+  box-sizing: content-box; /* Default behavior: padding and border are NOT included in width/height */
+  width: fit-content; 
+}
+
+.contentbutton:hover {
+  background-color: #3FE196;
+  box-shadow: 0 3px 1px 1px black;
+  /* offset-x offset-y blur-radius spread-radius color */
+  z-index: 1;
+}
+
+.borderbutton{
+  /* border */
+  border: solid;
+  border-radius: 5px;
+  border-color: tomato;
+  border-width: 1px;
+}
