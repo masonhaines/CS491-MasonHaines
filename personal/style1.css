@@ -52,13 +52,13 @@ body{
   /* background: url(); */          /* Placeholder for background image URL */
 }
 
-.welcomeheader h1 {
+/* .welcomeheader h1 { */
   /* margin-bottom: 0px; */
-}
+/* } */
 
-.welcomeheader h5 {
+/* .welcomeheader h5 { */
   /* margin-top: 25px; */
-}
+/* } */
 
 
 .headerborder {
@@ -78,6 +78,7 @@ body{
   position: fixed;
   right: 0;
   top: 0;
+  
   
 
   /* Box Model */
