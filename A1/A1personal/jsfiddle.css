@@ -1,0 +1,97 @@
+body{
+  background: linear-gradient(to left, #041E42,  #8A8D8F) ;
+  margin: 0;
+}
+
+.headertitle 
+{
+  /* Background */
+  background-color: #8A8D8F;
+  /* Positioning */
+  position:relative;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Box Model */
+  padding: 15px 50px;
+  width: fit-content;
+  box-sizing: border-box;
+  text-align: center;
+  z-index: 10; /* z order like unreal engine widgets*/
+}
+
+.border {
+  /* border */
+  border: solid;
+  border-radius: 50px;
+  border-color: black;
+  border-width: 15px;
+}
+
+.container {
+  display: flex;
+  /* centers the whole group horizontally */
+  justify-content: center; 
+  /* vertically aligns items */
+  align-items: center;     
+  margin-top: 80px;
+  gap: 20px;        
+}
+
+.messagecontainer {
+  display:flex;
+  /* centers the whole group horizontally */
+  justify-content: center; 
+  /* vertically aligns items */
+  align-items: center;     
+  margin-top: 10px;
+  /* visibility: hidden; */
+}
+
+#userinput {
+  background-color: aliceblue;
+  padding: 25px;
+  font-size: 2em;    
+  font-weight: bold;
+  text-align: center;
+}
+
+.dialbutton {
+  background-color: aliceblue;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 2em;    
+  font-weight: bold;
+}
+
+.dialbutton:hover {
+  background-color: rgb(86, 219, 86); 
+  box-shadow: 0 3px 1px 1px rgb(255, 255, 255);
+}
+
+.keypadbuttons {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);  
+  gap: 10px;                               
+  background-color: #8A8D8F;
+  padding: 20px;
+  width: fit-content;
+  margin: 8px auto 0;                    
+  /* border-radius: 10px; */
+}
+
+.keypadbuttons button {
+  height: 80px;
+  font-size: 1.5em;    
+  font-weight: bold;
+  background-color: whitesmoke;
+  border: 5px solid black;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.keypadbuttons button:hover {
+  background-color: #2a72d6; 
+  box-shadow: 0 3px 3px 3px black;
+}
+
