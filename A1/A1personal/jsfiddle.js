@@ -18,7 +18,7 @@ document.getElementById("dialbutton").onclick = function startDialer() {
 
         if ([1, 5, 7, 10].includes(userInput.value.length)) {
             // document.getElementById("calling").style.visibility = "visible";
-            document.getElementById("message").textContent = `Calling ${userInput.value}`;
+            document.getElementById("message").textContent = `Calling ${userInput.value}`; // the ` makes is for string interpolation 
             dialCallButton.textContent = 'End';
 
         } else if (userInput.value.length === 0) {
