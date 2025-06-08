@@ -24,7 +24,7 @@ startGame();
 
 function initGame() {
 
-    cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
+    initCells();
     // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
     clearButton.addEventListener("click", restartGame);
     statusText.textContent = `${currentPlayer}'s turn`;
@@ -32,6 +32,11 @@ function initGame() {
 
     startButton.removeEventListener("click", initGame);
 
+}
+
+// helper function to re init the cells object
+function initCells() {
+    cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
 }
 
 function cellClicked() {
@@ -42,27 +47,33 @@ function cellClicked() {
         return;
     }
 
-    updateCell(this, cellIndex);
+    updateUsersChoiceCell(this, cellIndex);
     checkWinner();
 }
 
-function updateCell (cell, index) {
+function updateUsersChoiceCell (cell, index) {
 
     // options at the current index of cell clicked is being set to the current player either "X" or "O"
-
     options[index] = currentPlayer;
     cell.textContent = currentPlayer;
     if (currentPlayer == "X") {
         cell.style.color = "black";
     }
-    else {
-        cell.style.color = "#ffffff8f";
-    }
 }
 
 function changePlayer() {
     // if the current player is X we will assign the new current player to O
-    currentPlayer = (currentPlayer == "X") ? currentPlayer = "O" : "X"; 
+    // currentPlayer = (currentPlayer == "X") ? currentPlayer = "O" : "X"; // old for testing 
+    if (currentPlayer === "X") {
+
+        currentPlayer = "O";
+        computerSelection();
+
+    } else {
+
+        currentPlayer = "X";
+
+    }
     statusText.textContent = `${currentPlayer}'s turn`;
 
 }
@@ -100,9 +111,9 @@ function checkWinner () {
         if (cellA == cellB && cellB == cellC) {
 
             roundWon = true;
-            cells[condition[0]].style.color = "green";
-            cells[condition[1]].style.color = "green";
-            cells[condition[2]].style.color = "green";
+            cells[condition[0]].style.color = "greenyellow";
+            cells[condition[1]].style.color = "greenyellow";
+            cells[condition[2]].style.color = "greenyellow";
             break;
         }
     }
@@ -142,4 +153,59 @@ function startGame () {
     statusText.textContent = `Press Start to Play!`;
     startButton.addEventListener("click", initGame);
 
+}
+
+async function computerSelection() {
+
+    cells.forEach(cell => cell.removeEventListener("click", cellClicked));
+
+    if (currentPlayer == "X") {
+        return;
+    }
+
+    var randomNumber = Math.floor(Math.random() * 9);
+    var randomOffset = Math.floor(Math.random() * 9);
+    let computerChoice = -1; 
+
+    // await sleep(2000); // dwell computer decision for x seconds
+    for (let i = 0; i < options.length; i ++) {
+
+        await sleep(300); 
+        if(i >=1) {
+            // cells[i-1].style.backgroundColor = "transparent";
+            recolorCells(i-1);
+        }
+        
+        if (options[i] == "") {
+
+            cells[i].style.backgroundColor = "greenyellow";
+            
+            if (randomNumber === i) {
+                computerChoice = i;
+                break;
+            }
+            else if (randomNumber - i >= randomOffset && randomNumber - i >= computerChoice) {
+                computerChoice = i;
+            }
+            else {
+                computerChoice = i;
+            }
+        }
+    }
+    
+    options[computerChoice] = currentPlayer;
+    cells[computerChoice].textContent = currentPlayer;
+    recolorCells(computerChoice);
+    cells[computerChoice].style.color = "#ffffff8f";
+    checkWinner();
+    initCells();
+}
+
+function sleep(ms) {
+    return new Promise(resolve =>setTimeout(resolve, ms)); // https://youtu.be/pw_abLxr4PI?si=Tlfw1HBU92o0wX3B
+}
+
+function recolorCells(i) {
+    // cells.forEach(color => color.style.backgroundColor = "transparent"); // this works too but need to remove function param
+    cells[i].style.backgroundColor = "transparent";
 }
