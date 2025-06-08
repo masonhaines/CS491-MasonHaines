@@ -6,8 +6,7 @@
 }
 
 body {
-    /* font-family: arial, sans-serif;
-     */
+
     background-color: rgb(221, 211, 198);
     margin: 5px;
     display: flex;
@@ -35,6 +34,26 @@ body {
     padding-bottom: 35px;
 }
 
+#titleH1 {
+
+    font-family: "Jersey 10", sans-serif;
+    font-size: 3rem;
+    font-weight: bolder;
+    display: inline-block;
+    
+    background-color: hsl(0, 0%, 0%);
+    color: white;
+    border: 5px solid hsla(0, 0%, 100%, 0.562);
+    border-radius: 20px;
+    outline: 5px solid black;
+    outline-offset: 0px;
+    
+    padding: 20px 150px; /* keep this, it increases background */
+    text-align: center;
+
+    white-space: nowrap;
+}
+
 /* selector for cell container id  */
 #cellContainer {
     display: grid;
@@ -43,16 +62,32 @@ body {
     margin: auto;
 }
 
+#statusText {
+    font-family: "Jersey 10", sans-serif;
+    display:flex;
+    align-items: center;
+    background-color: hsl(0, 0%, 0%);
+    color: white;
+
+    border:5px solid hsla(0, 0%, 100%, 0.561);
+    border-radius: 20px;
+    outline: 5px solid black;
+    outline-offset: 0px;
+
+    padding: 20px;
+}
+
 /* selector for cell class */
 .cell {
     width:90px;
     height:90px;
-    border: 3px solid;
+    border: 3px solid black;
     box-shadow: 0 0 0 0px;
     line-height: 75px;
 
     font-family: "Jersey 10", sans-serif;
     font-size: 100px;
+    color: black;
     text-align: center;
     cursor: pointer;
 
@@ -78,15 +113,19 @@ body {
 
 button[type="button"] {
     font-family: "Jersey 10", sans-serif;
-    padding: 10px 20px;
+    padding: 10px 30px;
     font-weight: bold;
     font-size: 1.5rem;
+
     background-color: hsl(0, 0%, 0%);
     color: white;
-    border: 2px solid hsla(0, 0%, 100%, 0.562);
-    border-radius: 20px;
-    cursor:pointer;
 
+    border: 5px solid hsla(0, 0%, 100%, 0.562);
+    border-radius: 20px;
+    outline: 5px solid black;
+    outline-offset: 0px;
+    
+    cursor:pointer;
     display: flex;
     flex-direction: row;
     align-items: center;
