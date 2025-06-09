@@ -3,10 +3,14 @@
 class TicTacToe {
 
     /**
-     * @param{number[][]} winConditions - 2d array of possible win conditions with in the gam e
-     * @param{string[]} options - array that holds the current state of the array 
-     * @param{string} currentPlayer - the current players character will be X or O
-     * @param{boolean} running - the current state of the game, whether it is running or not 
+     * @param {string} currentPlayer - the current players character will be X or O
+     * @param {string[]} options - array that holds the current state of the array 
+     * @param {boolean} running - the current state of the game, whether it is running or not 
+     * @param {number[][]} winConditions - 2d array of possible win conditions with in the gam e
+     * @param {*} cells
+     * @param {*} clearButton  
+     * @param {*} startButton 
+     * @param {*} statusText 
      */
 
     constructor(options, currentPlayer, running, winConditions, cells, statusText, clearButton, startButton){
@@ -25,7 +29,7 @@ class TicTacToe {
      * inits the DOM objects and queries them from the html doc 
      * and inits the game to now be running and the starting player to be X
      */
-
+    
     createBoard() {
         const cells = document.querySelectorAll(".cell"); // query all cells on the tic tac toe board
         const statusText = document.querySelector("#statusText");  // query select the h3 header with id statusText
@@ -59,8 +63,8 @@ class TicTacToe {
 
     startGame () {
 
-        statusText.textContent = `Press Start to Play!`;
-        startButton.addEventListener("click", initGame);
+        this.statusText.textContent = `Press Start to Play!`;
+        this.startButton.addEventListener("click", initGame);
     }
 
     /**
@@ -71,12 +75,15 @@ class TicTacToe {
 
     initGame() {
 
-        running = true;
+        if(!running) {
+            running = true;
+        }
+        
         initCells();
         this.enableClearButton();
         this.displayCurrentPlayerForStatusText();
 
-        startButton.removeEventListener("click", initGame);  // create event listener for start button to begin a new game 
+        this.startButton.removeEventListener("click", initGame);  // create event listener for start button to begin a new game 
     }
 
     /**
@@ -85,6 +92,7 @@ class TicTacToe {
      */
 
     displayCurrentPlayerForStatusText() {
+
         statusText.textContent = `${currentPlayer}'s turn`;
     }
 
@@ -94,11 +102,11 @@ class TicTacToe {
      */
 
     enableClearButton() {
+
         if(running){
             // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
-            clearButton.addEventListener("click", restartGame);
+            this.clearButton.addEventListener("click", restartGame);
         }
-  
     }
 
     /**
@@ -106,21 +114,36 @@ class TicTacToe {
      * additonally resetting the color of the text content color of the cells 
      */
     initCells() {
-        cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
-        cells.forEach(color => color.style.color= "black"); // reset color for all cell text content
+
+        this.cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
+        this.cells.forEach(color => color.style.color= "black"); // reset color for all cell text content
     }
 
-    cellClicked() {
+    /**
+     * event handler for when a cell is clicked during gameplay
+     * gets the clicked cell index, prevents moves if cell is taken or game is not running
+     * updates the cell with user's choice and checks for a win condition
+     * @param {MouseEvent} event - web browser provided object that gives us feedback when mouse action is provided
+     * for this instance we are looking for a cellindex to be clicked
+     */
 
-        const cellIndex = this.getAttribute("cellIndex"); // this refers to what ever cell in clicked
+    cellClicked(event) {
 
-        if (options[cellIndex] != "" || !running ) {
+        const cellIndex = event.target.getAttribute("cellIndex"); // this refers to what ever cell is clicked on screen by user
+
+        if (this.options[cellIndex] != "" || !this.running ) {
             return;
         }
 
-        updateUsersChoiceCell(this, cellIndex);
-        checkWinner();
+        this.updateUsersChoiceCell(event.target, cellIndex);
+        this.checkWinner();
     }
+
+    /**
+     * updates game state and UI for the selected cell that was passed by cellClicked
+     * @param {number} index - The index of the cell in the options array
+     * @param {} cell - the cell element that was clicked during the event that was stored from cellClicked
+     */
 
     updateUsersChoiceCell (cell, index) {
 
