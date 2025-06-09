@@ -54,7 +54,7 @@ body {
     outline: 5px solid black;
     outline-offset: 0px;
     
-    padding: 20px 150px; /* keep this, it increases background */
+    padding: 20px 150px;
     text-align: center;
 
     white-space: nowrap;
