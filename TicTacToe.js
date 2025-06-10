@@ -151,15 +151,6 @@
     }
 
     /**
-     * function that checks the handicap boolean 
-     * if it has not been set it is set anc change player is called again
-     */
-    // function playTwice() {
-
-
-    // }
-
-    /**
      * when this is called if the gamne is running and the handicap has not been use yet...
      * it will call the init cells again and that player will get a secoind move 
      * is called after a move is made by a player and toggles the current player between "x" and "O"
