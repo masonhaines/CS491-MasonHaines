@@ -68,6 +68,7 @@ body {
     grid-template-columns: repeat(3, auto);
     width: auto;
     margin: auto;
+    padding: 50px 50px;
 
 }
 
@@ -128,7 +129,7 @@ button[type="button"] {
 
     font-family: "Jersey 10", sans-serif;
     padding: 10px 30px;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 1.5rem;
 
     background-color: hsl(0, 0%, 0%);
@@ -144,6 +145,8 @@ button[type="button"] {
     flex-direction: row;
     align-items: center;
 
+    white-space: nowrap;
+
 }
 
 button[type="button"]:hover {
@@ -151,6 +154,43 @@ button[type="button"]:hover {
     background-color: hsl(204, 2%, 55%);
 
 }
+
+.tooltip {
+  position: relative;
+}
+
+.tooltiptext {
+  --scale: 0;
+  transform: scale(var(--scale));
+  /* transform-origin: top center; */
+  transition: 150ms ;
+  
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 10px;
+
+  visibility: hidden;
+  background-color: hsl(110, 64%, 74%);
+  color: black;
+  padding: 0.5rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.tooltip:hover .tooltiptext {
+  --scale: 1;
+  visibility: visible;
+}
+
+/* #changePlayerButton:hover + .tooltip{
+    
+    visibility: visible;
+} */
+
+
+
 
 /* possoble types
 text
