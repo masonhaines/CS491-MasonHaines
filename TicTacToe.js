@@ -1,52 +1,56 @@
 /* Mason Haines 6/6/2025 */
 
-class TicTacToe {
+/**
+ * anonymous immediately invoked function that will execute immediately after being called
+ * https://www.youtube.com/watch?v=SMUHorBkVsY
+ */
 
+(function(){
     /**
-     * @param {string} currentPlayer - the current players character will be X or O
-     * @param {string[]} options - array that holds the current state of the array 
-     * @param {boolean} running - the current state of the game, whether it is running or not 
-     * @param {number[][]} winConditions - 2d array of possible win conditions with in the gam e
-     * @param {html} cells - query all cells on the tic tac toe board
-     * @param {html} clearButton - query select the h3 header with id statusText
-     * @param {html} startButton - query select the button with id clearButton
-     * @param {html} statusText - query select the button with id startButton
-     */
+ * @param {string} currentPlayer - the current players character will be X or O
+ * @param {string[]} options - array that holds the current state of the array 
+ * @param {boolean} running - the current state of the game, whether it is running or not 
+ * @param {number[][]} winConditions - 2d array of possible win conditions with in the gam e
+ * @param {html} cells - query all cells on the tic tac toe board
+ * @param {html} clearButton - query select the h3 header with id statusText
+ * @param {html} startButton - query select the button with id clearButton
+ * @param {html} statusText - query select the button with id startButton
+ */
 
-    constructor(cells, statusText, clearButton, startButton){
-    
-        this.cells = cells;
-        this.statusText = statusText;
-        this.startButton = startButton;
-        this.clearButton = clearButton;
+    const cells = document.querySelectorAll(".cell"); // query all cells on the tic tac toe board
+    const statusText = document.querySelector("#statusText");  // query select the h3 header with id statusText
+    const clearButton = document.querySelector("#clearButton"); // query select the button with id clearButton
+    const startButton = document.querySelector("#startButton"); // query select the button with id startButton
 
-        const winConditions = [
+    const winConditions = [
 
-            [0,1,2], 
-            [3,4,5],
-            [6,7,8],
-            [0,3,6],
-            [1,4,7],
-            [2,5,8],
-            [0,4,8],
-            [2,4,6]
+        [0,1,2], 
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
 
-        ];
+    ];
 
-        const options = ["", "", "", "", "", "", "", "", "" ];
-        const currentPlayer = "X";
-        const running = false;
-    }
+    let options = ["", "", "", "", "", "", "", "", "" ];
+    let currentPlayer = "X";
+    let running = false;
+
+    startGame();
+
 
     /**
      * prompts user to start a new game and initializes the start button to have an event listener for click
      * on click calls initGame to make game playable 
      */
 
-    startGame() {
+    function startGame() {
 
-        this.statusText.textContent = `Press Start to Play!`;
-        this.startButton.addEventListener("click", this.initGame);
+        statusText.textContent = `Press Start to Play!`;
+        startButton.addEventListener("click", initGame);
     }
 
     /**
@@ -55,17 +59,19 @@ class TicTacToe {
      * and creates and event listener for the clear button which calls restart game on click
      */
 
-    initGame() {
+    function initGame() {
 
-        if(!this.running) {
-            this.running = true;
+        if(!running) {
+            running = true;
         }
-        
-        this.initCells();
-        this.enableClearButton();
-        this.displayCurrentPlayerForStatusText();
 
-        this.startButton.removeEventListener("click", this.initGame);  // create event listener for start button to begin a new game 
+        // console.log("initCells inside initGame:", initCells);
+        
+        initCells();
+        enableClearButton();
+        displayCurrentPlayerForStatusText();
+
+        startButton.removeEventListener("click", initGame);  // create event listener for start button to begin a new game 
     }
 
     /**
@@ -73,9 +79,9 @@ class TicTacToe {
      * current player will display within the html element with statustext id 
      */
 
-    displayCurrentPlayerForStatusText() {
+    function displayCurrentPlayerForStatusText() {
 
-        this.statusText.textContent = `${this.currentPlayer}'s turn`;
+        statusText.textContent = `${currentPlayer}'s turn`;
     }
 
     /**
@@ -83,11 +89,11 @@ class TicTacToe {
      * is called in init game and computer selection
      */
 
-    enableClearButton() {
+    function enableClearButton() {
 
-        if(this.running){
+        if(running){
             // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
-            this.clearButton.addEventListener("click", this.restartGame);
+            clearButton.addEventListener("click", restartGame);
         }
     }
 
@@ -96,10 +102,10 @@ class TicTacToe {
      * additonally resetting the color of the text content color of the cells 
      */
 
-    initCells() {
+    function initCells() {
 
-        this.cells.forEach(cell => cell.addEventListener("click", this.cellClicked)); // addEventListener(type, listener) 
-        this.cells.forEach(color => color.style.color= "black"); // reset color for all cell text content
+        cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
+        cells.forEach(color => color.style.color= "black"); // reset color for all cell text content
     }
 
     /**
@@ -110,64 +116,97 @@ class TicTacToe {
      * for this instance we are looking for a cellindex to be clicked
      */
 
-    cellClicked(event) {
+    function cellClicked(event) {
 
         const cellIndex = event.target.getAttribute("cellIndex"); // this refers to what ever cell is clicked on screen by user
 
-        if (this.options[cellIndex] != "" || !this.running ) {
+        if (options[cellIndex] != "" || !running ) {
             return;
         }
 
-        this.updateUsersChoiceCell(event.target, cellIndex);
-        this.checkWinner();
+        updateUsersChoiceCell(event.target, cellIndex);
+        checkWinner();
     }
 
     /**
      * updates game state and UI for the selected cell that was passed by cellClicked
      * @param {number} index - The index of the cell in the options array
-     * @param {} cell - the cell element that was clicked during the event that was stored from cellClicked
+     * @param {html} cell - the cell element that was clicked during the event that was stored from cellClicked
      */
 
-    updateUsersChoiceCell (cell, index) {
+    function updateUsersChoiceCell (cell, index) {
 
         // options at the current index of cell clicked is being set to the current player either "X" or "O"
-        this.options[index] = this.currentPlayer;
+        options[index] = currentPlayer;
         if (cell) {
-            this.cell.textContent = this.currentPlayer;
+            cell.textContent = currentPlayer;
         }
-        // if (this.currentPlayer == "X") {
+        // if (currentPlayer == "X") {
         //     // cell.style.color = "black";
         // }
     }
 
     /**
-     * 
+     * is called after a move is made by a player and toggles the current player between "x" and "O"
+     * if the current player is "O", the function calls the computer selection function
+     * at the end it updates the current player to the statusText tect content
      */
 
-    changePlayer() {
+    function changePlayer() {
         // if the current player is X we will assign the new current player to O
         // currentPlayer = (currentPlayer == "X") ? currentPlayer = "O" : "X"; // old for testing 
-        if (this.currentPlayer === "X") {
+        // console.log("currentPlayer before change:", currentPlayer);
+        if (currentPlayer === "X") {
 
-            this.currentPlayer = "O";
-            this.computerSelection();
+            currentPlayer = "O";
+            computerSelection();
 
         } else {
 
-            this.currentPlayer = "X";
+            currentPlayer = "X";
         }
-        this.statusText.textContent = `${this.currentPlayer}'s turn`;
+        displayCurrentPlayerForStatusText();
 
     }
 
     /**
-     * 
+     * checks if a win condition is met by compring all combinations in winConditions
+     * if a win is found, highlights the winning cells and ends the game
+     * if no win but the board is full, declares a draw
+     * otherwise calls changePlayer to continue the game
      */
 
-    checkWinner () {
+    function checkWinner () {
         let roundWon = false;
 
-        for(let i = 0; i < this.winConditions.length/*8*/; i++) {
+        roundWon = checkForThreeInARow(false, options);
+
+        if (roundWon) {
+
+            statusText.textContent = `${currentPlayer} wins! Press Clear to restart game`;
+            running = false;
+        }
+        else if (!options.includes("")) {
+
+            statusText.textContent = `Draw! Press Clear to restart game`;
+            running = false;
+        }
+        else {
+            changePlayer();
+        }
+    }
+
+    /**
+     * 
+     * @param {boolean} isComputer 
+     * @param {number[]} tempOptions
+     */
+
+    function checkForThreeInARow(isComputer, thisOptions) {
+
+        let returnValue = 0;
+
+        for(let i = 0; i < winConditions.length/*8*/; i++) {
 
             // so if condition is winConditions at index [0] it would be [0,1,2]
             // lets just say the options are all still empty " "
@@ -175,56 +214,76 @@ class TicTacToe {
             // that would mean that cellA cellb and cellC are empty as well because they are initialized to the value of the option array at ....
             // the value of the 3 element condition array and in this examplew would be [0,1,2] but could be [0,4,8] etc
 
-            const condition = this.winConditions[i];
-            const cellA = this.options[condition[0]];
-            const cellB = this.options[condition[1]];
-            const cellC = this.options[condition[2]];
+            const condition = winConditions[i];
+            const cellA = thisOptions[condition[0]];
+            const cellB = thisOptions[condition[1]];
+            const cellC = thisOptions[condition[2]];
 
             if (cellA == "" || cellB == "" || cellC == "") {
 
-                continue;
+                if(!isComputer){
+                    continue;
+                }
+                else {
+                    console.log("ive returned -1");
+                    returnValue = -1;
+                }
             }
-            if (cellA == cellB && cellB == cellC) {
+            else if (cellA == cellB && cellB == cellC) {
 
-                roundWon = true;
-                this.cells[condition[0]].style.color = "red";
-                this.cells[condition[1]].style.color = "red";
-                this.cells[condition[2]].style.color = "red";
-                break;
+                if (!isComputer) {
+                    changeWinnerColors(condition);
+                    return true;
+                } 
+                else {
+                    console.log("ive returned 1");
+                    returnValue = 1;
+                }
+            } 
+            else {
+
+                if(!isComputer){
+                    continue;
+                }
+                else {
+                    console.log("ive returned neg 1");
+                    returnValue = -1;
+                }
             }
         }
 
-        if (roundWon) {
+        if (!isComputer) {
+            return false;
+        }
 
-            this.statusText.textContent = `${this.currentPlayer} wins! Press Clear to restart game`;
-            this.running = false;
-        }
-        else if (!this.options.includes("")) {
+        return returnValue;
+    }
 
-            this.statusText.textContent = `Draw! Press Clear to restart game`;
-            this.running = false;
-        }
-        else {
-            this.changePlayer();
-        }
+    function changeWinnerColors(condition) {
+                
+        cells[condition[0]].style.color = "red";
+        cells[condition[1]].style.color = "red";
+        cells[condition[2]].style.color = "red";
     }
 
     /**
-     * 
+     * resets the game state to its initial configuration for a new match
+     * sets currentPlayer to "X", clears the options array and all cell text content
+     * sets running to false and calls startGame 
      */
 
-    restartGame () {
+    function restartGame () {
         
-        this.currentPlayer = "X";
+        currentPlayer = "X";
 
-        this.options = ["", "", "", "", "", "", "", "", ""];
+        options = ["", "", "", "", "", "", "", "", ""];
 
-        this.statusText.textContent = `${this.currentPlayer}'s turn`;
+        displayCurrentPlayerForStatusText();
 
-        this.cells.forEach(cell => this.cell.textContent = "");
+        cells.forEach(cell => cell.textContent = "");
 
-        this.running = false;
-        this.startGame();
+        running = false;
+        startGame();
 
     }
 
@@ -233,81 +292,74 @@ class TicTacToe {
      * @returns - only current player is "X"
      */
 
-    async computerSelection() {
+    async function computerSelection() {
 
-        this.cells.forEach(cell => this.cell.removeEventListener("click", this.cellClicked));
-        this.clearButton.removeEventListener("click", this.restartGame);
+        cells.forEach(cell => cell.removeEventListener("click", cellClicked));
+        clearButton.removeEventListener("click", restartGame);
 
-        if (this.currentPlayer == "X") {
+        if (currentPlayer == "X") {
             return;
         }
 
         var randomNumber = Math.floor(Math.random() * 9);
         var randomOffset = Math.floor(Math.random() * 9);
-        let computerChoice = -1; 
+        let computerChoice; 
 
-        await sleep(300); // dwell computer decision for x seconds
-        for (let i = 0; i < this.options.length; i ++) {
+        await sleep(2000); // dwell computer decision for x seconds
 
-            await sleep(300); 
-            if(i >=1) {
-                // cells[i-1].style.backgroundColor = "transparent";
-                this.recolorCells(i-1);
-            }
-            
-            if (this.options[i] == "") {
-
-                this.cells[i].style.backgroundColor = "greenyellow";
-
-                if (randomNumber === i) {
-                    computerChoice = i;
-                    break;
-                }
-                else if (randomNumber - i >= randomOffset && randomNumber - i >= computerChoice) {
-                    computerChoice = i;
-                }
-                else {
-                    computerChoice = i;
-                }
-            }
-        }
         
-        this.enableClearButton();// return event listern for clear button
-        this.options[computerChoice] = this.currentPlayer;
-        this.cells[computerChoice].textContent = this.currentPlayer;
-        this.recolorCells(computerChoice);
+        let bestOption = -10;
+        let bestOptionIndex = -1;
+        // let grade;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i] == "") {
+                tempOptions = [...options]; // https://www.geeksforgeeks.org/javascript/how-to-clone-an-array-in-javascript/
+                tempOptions[i] = "X";
+                let grade = checkForThreeInARow(true, tempOptions);
+                console.log(grade);
+                // tempOptions.forEach((val, idx) => console.log(`${idx}: ${val}`));
+
+                if (grade > bestOption) {
+                    bestOption = grade;
+                    bestOptionIndex = i;
+                    console.log(bestOption);
+                }
+            }
+            // console.log("hello");
+        }
+
+        console.log(bestOption);
+        
+        computerChoice = bestOptionIndex;
+        
+        enableClearButton();// return event listern for clear button
+        options[computerChoice] = currentPlayer;
+        cells[computerChoice].textContent = currentPlayer;
+        // recolorCells(computerChoice);
         // cells[computerChoice].style.color = "#ffffff8f"; // this was to color the computers moves a different color for better differentiation
-        this.checkWinner();
-        this.initCells();
+        checkWinner();
+        initCells();
     }
 
-    /**
-     * 
-     * @param {*} ms 
-     * @returns 
+    
+
+       /**
+     * creates a delay used to pause logic for a set amount of milli seconds
+     * @param {number} ms - the number of milli seconds to delay
+     * @returns {Promise} 
      */
 
-    sleep(ms) {
+    function sleep(ms) {
         return new Promise(resolve =>setTimeout(resolve, ms)); // https://youtu.be/pw_abLxr4PI?si=Tlfw1HBU92o0wX3B
     }
 
-    /**
-     * 
-     * @param {number} i - index for cells
-     */
+    // /**
+    //  * recolors all cells back to transparent after the computer makes a decision
+    //  * @param {number} i - index for cells
+    //  */
 
-    recolorCells(i) {
-        // cells.forEach(color => color.style.backgroundColor = "transparent"); // this works too but need to remove function param
-        this.cells[i].style.backgroundColor = "transparent";
-    }
-
-};
-
-const myGame = new TicTacToe(
-    document.querySelectorAll(".cell"),
-    document.querySelector("#statusText"),
-    document.querySelector("#clearButton"),
-    document.querySelector("#startButton")
-)
-
-myGame.startGame();
+    // function recolorCells(i) {
+    //     // cells.forEach(color => color.style.backgroundColor = "transparent"); // this works too but need to remove function param
+    //     cells[i].style.backgroundColor = "";
+    // }
+}());
