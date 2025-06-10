@@ -21,6 +21,8 @@
     const statusText = document.querySelector("#statusText");  // query select the h3 header with id statusText
     const clearButton = document.querySelector("#clearButton"); // query select the button with id clearButton
     const startButton = document.querySelector("#startButton"); // query select the button with id startButton
+    const changePlayerButton = document.querySelector("#changePlayerButton"); // query select the button with id ChangePlayerButton
+
 
     const winConditions = [
 
@@ -38,10 +40,11 @@
     let options = ["", "", "", "", "", "", "", "", "" ];
     let currentPlayer = "X";
     let running = false;
+    let handicapUsed = false;
+    let computerIsFirstPlayer = false;
 
     startGame();
-
-
+    
     /**
      * prompts user to start a new game and initializes the start button to have an event listener for click
      * on click calls initGame to make game playable 
@@ -49,8 +52,17 @@
 
     function startGame() {
 
-        statusText.textContent = `Press Start to Play!`;
+        displayFirstPlayerMessage();
         startButton.addEventListener("click", initGame);
+        ChooseStartingPlayer();
+    }
+
+    /**
+     * chnages the first player that can move 
+     */
+    function ChooseStartingPlayer() {
+
+        changePlayerButton.addEventListener("click", changePlayer);
     }
 
     /**
@@ -64,24 +76,12 @@
         if(!running) {
             running = true;
         }
-
-        // console.log("initCells inside initGame:", initCells);
         
+        displayCurrentPlayerForStatusText();
         initCells();
         enableClearButton();
-        displayCurrentPlayerForStatusText();
-
         startButton.removeEventListener("click", initGame);  // create event listener for start button to begin a new game 
-    }
-
-    /**
-     * display the current player whos turn it is to move 
-     * current player will display within the html element with statustext id 
-     */
-
-    function displayCurrentPlayerForStatusText() {
-
-        statusText.textContent = `${currentPlayer}'s turn`;
+        changePlayerButton.removeEventListener("click", changePlayer);
     }
 
     /**
@@ -98,14 +98,21 @@
     }
 
     /**
+     * function essentially alows either the player or computer to make a move depending on the currentplayer string 
      * helper function to re init the cells object adding the event listern for clicked 
      * additonally resetting the color of the text content color of the cells 
      */
 
     function initCells() {
 
-        cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
-        cells.forEach(color => color.style.color= "black"); // reset color for all cell text content
+        if (currentPlayer === "X") {
+            cells.forEach(cell => cell.addEventListener("click", cellClicked)); // addEventListener(type, listener) 
+        }
+        else if (currentPlayer === "O") {
+            computerSelection();
+        }
+        
+        cells.forEach(color => color.style.color = "black"); // reset color for all cell text content
     }
 
     /**
@@ -144,27 +151,64 @@
     }
 
     /**
+     * function that checks the handicap boolean 
+     * if it has not been set it is set anc change player is called again
+     */
+    // function playTwice() {
+
+
+    // }
+
+    /**
+     * when this is called if the gamne is running and the handicap has not been use yet...
+     * it will call the init cells again and that player will get a secoind move 
      * is called after a move is made by a player and toggles the current player between "x" and "O"
      * if the current player is "O", the function calls the computer selection function
      * at the end it updates the current player to the statusText tect content
      */
 
     function changePlayer() {
-        // if the current player is X we will assign the new current player to O
-        // currentPlayer = (currentPlayer == "X") ? currentPlayer = "O" : "X"; // old for testing 
-        // console.log("currentPlayer before change:", currentPlayer);
-        if (currentPlayer === "X") {
+        // console.trace();
 
+        if (!handicapUsed && running) {
+            handicapUsed = true;
+            initCells();
+            return;
+        }
+
+        if (currentPlayer == "X") {
             currentPlayer = "O";
-            computerSelection();
-
         } else {
-
             currentPlayer = "X";
         }
-        displayCurrentPlayerForStatusText();
 
+        if (!running){
+            displayFirstPlayerMessage();
+            computerIsFirstPlayer = !computerIsFirstPlayer;
+            return;
+        }
+     
+        displayCurrentPlayerForStatusText();
+        initCells();
     }
+
+    /**
+     * display the current player whos turn it is to move 
+     * current player will display within the html element with statustext id 
+     */
+
+    function displayCurrentPlayerForStatusText() {
+
+        statusText.textContent = `${currentPlayer}'s turn`;
+        document.querySelector(".tooltiptext").style.visibility = "hidden";
+    }
+
+    function displayFirstPlayerMessage() {
+
+        statusText.textContent = `First Player: ${currentPlayer} - Press Start to Play!`;
+        document.querySelector(".tooltiptext").style.visibility = "visible";
+    }
+
 
     /**
      * Checks for winner by calling function to check for three in a row
@@ -228,7 +272,6 @@
                     return true;
                 } 
                 else {
-                    console.log("ive returned 1");
                     returnValue = 1;
                 }
             } 
@@ -256,7 +299,7 @@
     /**
      * resets the game state to its initial configuration for a new match
      * sets currentPlayer to "X", clears the options array and all cell text content
-     * sets running to false and calls startGame 
+     * sets running and the handicap to false and calls startGame 
      */
 
     function restartGame () {
@@ -270,14 +313,16 @@
         cells.forEach(cell => cell.textContent = "");
 
         running = false;
+        handicapUsed = false;
         startGame();
 
     }
 
     /**
      * removes event listeners for the player as well as the clear game button
-     * then if the player is X for some reason it will return an alert and change the player to O
-     * function then calls a dwell and goes through simplified minimax algorithm to create best choice for computer
+     * If the computer is has the computer is frst player boolean as true then it will run the random location picker 
+     * it will run this twice and after it has ran it twice it toggle that boolean to false and use
+     * for loop that goes through simplified minimax algorithm to create best choice for computer
      * then function will place move check for a winner and if none re add event listeners
      */
 
@@ -290,37 +335,67 @@
         cells.forEach(cell => cell.removeEventListener("click", cellClicked));
         clearButton.removeEventListener("click", restartGame);
 
-        if (currentPlayer == "X") {
-            alert("player turns have become mixed");
-            currentPlayer = "O";
-        }
+        if (computerIsFirstPlayer) {
+            var randomNumber = Math.floor(Math.random() * 9);
+            var randomOffset = Math.floor(Math.random() * 5);
 
-        await sleep(2000); // dwell computer decision for x seconds
+            await sleep(2000); // dwell computer decision for x seconds
+            for (let i = 0; i < options.length; i ++) {
 
-        for (let i = 0; i < options.length; i++) {
-            if (options[i] == "") {
-                tempOptions = [...options]; // https://www.geeksforgeeks.org/javascript/how-to-clone-an-array-in-javascript/
-                tempOptions[i] = "X";
-                let grade = checkForThreeInARow(true, tempOptions); // grade is the value that is being stored for the best move
+                if (options[i] == "") {
 
-                // grade ius then compared here and the best grade will decide the best location to move. 
-                // if multiple locations have have the same grade moving to either will stillm create the same result
-                if (grade > bestOption) {
-                    bestOption = grade;
-                    bestOptionIndex = i;
+                    if (randomNumber === i) {
+                        computerChoice = i;
+                        break;
+                    }
+                    else if (randomNumber - i >= randomOffset && randomNumber - i >= computerChoice) {
+                        computerChoice = i;
+                    }
+                    else {
+                        computerChoice = i;
+                    }
                 }
             }
         }
 
-        console.log(bestOption);
-        
-        computerChoice = bestOptionIndex;
+        if (!computerIsFirstPlayer) {
+
+            await sleep(2000); // dwell computer decision for x seconds
+
+            for (let i = 0; i < options.length; i++) {
+                if (options[i] == "") {
+
+                    tempOptions = [...options]; // https://www.geeksforgeeks.org/javascript/how-to-clone-an-array-in-javascript/
+                    tempOptions[i] = "X";
+                    let gradeOfX = checkForThreeInARow(true, tempOptions); // grade is the value that is being stored for the best move
+
+                    tempOptions = [...options]; 
+                    tempOptions[i] = "O";
+                    let gradeOfO = checkForThreeInARow(true, tempOptions); 
+
+                    let gradeMAX = Math.max(gradeOfO, gradeOfX); // get the best grade from both O and X
+
+                    // grade ius then compared here and the best grade will decide the best location to move. 
+                    // if multiple locations have have the same grade moving to either will stillm create the same result
+                    if (gradeMAX > bestOption) {
+                        bestOption = gradeMAX;
+                        bestOptionIndex = i;
+                    }
+                }
+            }
+
+            computerChoice = bestOptionIndex;
+        }
+
+        if (handicapUsed) {
+            computerIsFirstPlayer = false;
+        }
+
         
         enableClearButton();// return event listern for clear button
         options[computerChoice] = currentPlayer;
         cells[computerChoice].textContent = currentPlayer;
         checkWinner();
-        initCells();
     }
 
        /**
