@@ -141,9 +141,6 @@
         if (cell) {
             cell.textContent = currentPlayer;
         }
-        // if (currentPlayer == "X") {
-        //     // cell.style.color = "black";
-        // }
     }
 
     /**
@@ -170,8 +167,8 @@
     }
 
     /**
-     * checks if a win condition is met by compring all combinations in winConditions
-     * if a win is found, highlights the winning cells and ends the game
+     * Checks for winner by calling function to check for three in a row
+     * return from three in a row is set to boolean for round won
      * if no win but the board is full, declares a draw
      * otherwise calls changePlayer to continue the game
      */
@@ -197,9 +194,12 @@
     }
 
     /**
-     * 
+     * checks if a win condition is met by compring all combinations in winConditions
+     * if a win is found, highlights the winning cells and returns true to checkwinner ends the game
      * @param {boolean} isComputer 
      * @param {number[]} tempOptions
+     * @returns {number|boolean} - returns a best option vaie for machine move or returns true for a win condition
+     * if no win condition returnvalue is init to zero so binary false 
      */
 
     function checkForThreeInARow(isComputer, thisOptions) {
@@ -219,17 +219,9 @@
             const cellB = thisOptions[condition[1]];
             const cellC = thisOptions[condition[2]];
 
-            if (cellA == "" || cellB == "" || cellC == "") {
+            if (cellA == cellB && cellB == cellC ) {
 
-                if(!isComputer){
-                    continue;
-                }
-                else {
-                    console.log("ive returned -1");
-                    returnValue = -1;
-                }
-            }
-            else if (cellA == cellB && cellB == cellC) {
+                if (cellA == "" || cellB == "" || cellC == "") { continue; } // double final check
 
                 if (!isComputer) {
                     changeWinnerColors(condition);
@@ -240,16 +232,6 @@
                     returnValue = 1;
                 }
             } 
-            else {
-
-                if(!isComputer){
-                    continue;
-                }
-                else {
-                    console.log("ive returned neg 1");
-                    returnValue = -1;
-                }
-            }
         }
 
         if (!isComputer) {
@@ -258,6 +240,11 @@
 
         return returnValue;
     }
+
+    /**
+     * gets specific elements that were verified for win and then changes the text content color of those cells
+     * @param {number[]} condition - array of win elements that were the condition for winning 
+     */
 
     function changeWinnerColors(condition) {
                 
@@ -288,44 +275,41 @@
     }
 
     /**
-     * 
-     * @returns - only current player is "X"
+     * removes event listeners for the player as well as the clear game button
+     * then if the player is X for some reason it will return an alert and change the player to O
+     * function then calls a dwell and goes through simplified minimax algorithm to create best choice for computer
+     * then function will place move check for a winner and if none re add event listeners
      */
 
     async function computerSelection() {
+
+        let computerChoice; 
+        let bestOption = -1;
+        let bestOptionIndex = -1;
 
         cells.forEach(cell => cell.removeEventListener("click", cellClicked));
         clearButton.removeEventListener("click", restartGame);
 
         if (currentPlayer == "X") {
-            return;
+            alert("player turns have become mixed");
+            currentPlayer = "O";
         }
-
-        var randomNumber = Math.floor(Math.random() * 9);
-        var randomOffset = Math.floor(Math.random() * 9);
-        let computerChoice; 
 
         await sleep(2000); // dwell computer decision for x seconds
 
-        
-        let bestOption = -10;
-        let bestOptionIndex = -1;
-        // let grade;
         for (let i = 0; i < options.length; i++) {
             if (options[i] == "") {
                 tempOptions = [...options]; // https://www.geeksforgeeks.org/javascript/how-to-clone-an-array-in-javascript/
                 tempOptions[i] = "X";
-                let grade = checkForThreeInARow(true, tempOptions);
-                console.log(grade);
-                // tempOptions.forEach((val, idx) => console.log(`${idx}: ${val}`));
+                let grade = checkForThreeInARow(true, tempOptions); // grade is the value that is being stored for the best move
 
+                // grade ius then compared here and the best grade will decide the best location to move. 
+                // if multiple locations have have the same grade moving to either will stillm create the same result
                 if (grade > bestOption) {
                     bestOption = grade;
                     bestOptionIndex = i;
-                    console.log(bestOption);
                 }
             }
-            // console.log("hello");
         }
 
         console.log(bestOption);
@@ -335,13 +319,9 @@
         enableClearButton();// return event listern for clear button
         options[computerChoice] = currentPlayer;
         cells[computerChoice].textContent = currentPlayer;
-        // recolorCells(computerChoice);
-        // cells[computerChoice].style.color = "#ffffff8f"; // this was to color the computers moves a different color for better differentiation
         checkWinner();
         initCells();
     }
-
-    
 
        /**
      * creates a delay used to pause logic for a set amount of milli seconds
@@ -353,13 +333,4 @@
         return new Promise(resolve =>setTimeout(resolve, ms)); // https://youtu.be/pw_abLxr4PI?si=Tlfw1HBU92o0wX3B
     }
 
-    // /**
-    //  * recolors all cells back to transparent after the computer makes a decision
-    //  * @param {number} i - index for cells
-    //  */
-
-    // function recolorCells(i) {
-    //     // cells.forEach(color => color.style.backgroundColor = "transparent"); // this works too but need to remove function param
-    //     cells[i].style.backgroundColor = "";
-    // }
 }());
