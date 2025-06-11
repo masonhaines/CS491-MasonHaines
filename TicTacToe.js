@@ -200,7 +200,6 @@
         document.querySelector(".tooltiptext").style.visibility = "visible";
     }
 
-
     /**
      * Checks for winner by calling function to check for three in a row
      * return from three in a row is set to boolean for round won
