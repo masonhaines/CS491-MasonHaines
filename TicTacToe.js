@@ -6,6 +6,17 @@
  */
 
 (function(){
+
+    /*****************************************************************************************
+    * *****************************************************************************************
+    * *****************************************************************************************
+    *                                    UI and DOM               
+    * *****************************************************************************************
+    * *****************************************************************************************                           
+    *****************************************************************************************/
+
+
+
     /**
  * @param {string} currentPlayer - the current players character will be X or O
  * @param {string[]} options - array that holds the current state of the array 
@@ -156,6 +167,8 @@
      * is called after a move is made by a player and toggles the current player between "x" and "O"
      * if the current player is "O", the function calls the computer selection function
      * at the end it updates the current player to the statusText tect content
+     * @sideEffects - updates global game state (currentPlayer), calls UI update functions,
+     * and may trigger the computer's move.
      */
 
     function changePlayer() {
@@ -228,12 +241,59 @@
     }
 
     /**
+     * gets specific elements that were verified for win and then changes the text content color of those cells
+     * @param {number[]} condition - array of win elements that were the condition for winning 
+     */
+
+    function changeWinnerColors(condition) {
+                
+        cells[condition[0]].style.color = "red";
+        cells[condition[1]].style.color = "red";
+        cells[condition[2]].style.color = "red";
+    }
+
+    /**
+     * remove event listeners for cells clicked as well,
+     * for the restart game so the player has to wait their turn 
+     * 
+     */
+
+    function removePlayerEventHandlers() {
+        cells.forEach(cell => cell.removeEventListener("click", cellClicked));
+        clearButton.removeEventListener("click", restartGame);
+    }
+
+    /**
+     * resets the game state to its initial configuration for a new match
+     * sets currentPlayer to "X", clears the options array and all cell text content
+     * sets running and the handicap to false and calls startGame 
+     */
+
+    function restartGame () {
+        
+        resetGameState();
+        displayCurrentPlayerForStatusText();
+        cells.forEach(cell => cell.textContent = "");
+        startGame();
+    }
+
+    /*****************************************************************************************
+    * *****************************************************************************************
+    * *****************************************************************************************
+    *                                         LOGIC           
+    * *****************************************************************************************
+    * *****************************************************************************************                          
+    *****************************************************************************************/
+
+
+    /**
      * checks if a win condition is met by compring all combinations in winConditions
      * if a win is found, highlights the winning cells and returns true to checkwinner ends the game
      * @param {boolean} isComputer 
      * @param {number[]} tempOptions
      * @returns {number|boolean} - returns a best option vaie for machine move or returns true for a win condition
      * if no win condition returnvalue is init to zero so binary false 
+     * @sideEffects - If isComputer is false and a win is found, modifies cell text color to red.
      */
 
     function checkForThreeInARow(isComputer, thisOptions) {
@@ -275,37 +335,15 @@
     }
 
     /**
-     * gets specific elements that were verified for win and then changes the text content color of those cells
-     * @param {number[]} condition - array of win elements that were the condition for winning 
+     * Resets the internal game state to its initial values. this is passed to restart game
+   
      */
 
-    function changeWinnerColors(condition) {
-                
-        cells[condition[0]].style.color = "red";
-        cells[condition[1]].style.color = "red";
-        cells[condition[2]].style.color = "red";
-    }
-
-    /**
-     * resets the game state to its initial configuration for a new match
-     * sets currentPlayer to "X", clears the options array and all cell text content
-     * sets running and the handicap to false and calls startGame 
-     */
-
-    function restartGame () {
-        
+    function resetGameState() {
         currentPlayer = "X";
-
         options = ["", "", "", "", "", "", "", "", ""];
-
-        displayCurrentPlayerForStatusText();
-
-        cells.forEach(cell => cell.textContent = "");
-
         running = false;
         handicapUsed = false;
-        startGame();
-
     }
 
     /**
@@ -322,8 +360,7 @@
         let bestOption = -1;
         let bestOptionIndex = -1;
 
-        cells.forEach(cell => cell.removeEventListener("click", cellClicked));
-        clearButton.removeEventListener("click", restartGame);
+        removePlayerEventHandlers();
 
         if (computerIsFirstPlayer) {
             var randomNumber = Math.floor(Math.random() * 9);
@@ -355,7 +392,7 @@
             for (let i = 0; i < options.length; i++) {
                 if (options[i] == "") {
 
-                    tempOptions = [...options]; // https://www.geeksforgeeks.org/javascript/how-to-clone-an-array-in-javascript/
+                    let tempOptions = [...options]; // https://www.geeksforgeeks.org/javascript/how-to-clone-an-array-in-javascript/
                     tempOptions[i] = "X";
                     let gradeOfX = checkForThreeInARow(true, tempOptions); // grade is the value that is being stored for the best move
 
@@ -381,7 +418,6 @@
             computerIsFirstPlayer = false;
         }
 
-        
         enableClearButton();// return event listern for clear button
         options[computerChoice] = currentPlayer;
         cells[computerChoice].textContent = currentPlayer;
