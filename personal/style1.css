@@ -52,13 +52,13 @@ body{
   /* background: url(); */          /* Placeholder for background image URL */
 }
 
-.welcomeheader h1 {
+/* .welcomeheader h1 { */
   /* margin-bottom: 0px; */
-}
+/* } */
 
-.welcomeheader h5 {
+/* .welcomeheader h5 { */
   /* margin-top: 25px; */
-}
+/* } */
 
 
 .headerborder {
@@ -79,6 +79,7 @@ body{
   right: 0;
   top: 0;
   
+  
 
   /* Box Model */
   padding: 10px;
@@ -89,6 +90,14 @@ body{
   /* Text */
   font-size: 1em;
   text-align: center;
+
+
+  
+    text-shadow:
+  -1px -1px 0 black,
+   1px -1px 0 black,
+  -1px  1px 0 black,
+   1px  1px 0 black;
 }
 
 .contentborder {

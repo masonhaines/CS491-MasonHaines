@@ -1,0 +1,26 @@
+{
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "name": "cs491-masonhaines",
+  "version": "1.0.0",
+  "description": "Course 491 summer 2025",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masonhaines/CS491-MasonHaines.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/masonhaines/CS491-MasonHaines/issues"
+  },
+  "homepage": "https://github.com/masonhaines/CS491-MasonHaines#readme"
+}
