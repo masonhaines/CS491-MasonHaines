@@ -1,1 +1,20 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# Angular / Node
 node_modules/
+dist/
+.angular/
+
+# Secrets
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+appsettings.local.json
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
