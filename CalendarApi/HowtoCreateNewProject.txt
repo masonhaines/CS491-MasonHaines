@@ -44,3 +44,12 @@ dotnet tool install --global dotnet-ef --version 9.0.11
 dotnet ef migrations add InitialCreate
 dotnet ef database update  
 ef migrations remove
+
+
+
+https://nodejs.org/
+node -v
+v24.21.0
+
+
+npm install -g @angular/cli
