@@ -1,0 +1,51 @@
+CMD:
+dotnet new webapi --use-controllers -o CalendarApi
+
+Beginning 
+
+Once that command finishes, cd CalendarApi and open it in your editor. You'll see:
+
+Program.cs — the entry point. Builds the app, registers services (DI container), configures the middleware pipeline, starts listening.
+CalendarApi.csproj — project file: target framework, NuGet package references, build settings. This is your package.json equivalent.
+appsettings.json / appsettings.Development.json — config values (connection strings, logging levels), environment-layered.
+Properties/launchSettings.json — dev-time launch profiles: which port, which environment variable (ASPNETCORE_ENVIRONMENT) gets set when you hit run.
+Controllers/WeatherForecastController.cs — the sample controller the template scaffolds so you have something to hit immediately.
+obj/ and bin/ — build output, gitignored, don't touch.
+
+-------------------------------Run it with dotnet run and confirm you get a URL back in the terminal and the sample endpoint responds.
+
+---------------------------------------------------------------------------------------------------------------Good references---------------------------------------------------------------------------------------------------------------
+    https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-10.0
+    https://www.classcentral.com/course/youtube-asp-net-core-full-course-for-beginners-288264
+
+
+---------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------------
+HTTP methods CRUD
+Create - POST - this creates a new resource 
+Read - GET - this retrieves a resource representation/state
+Update - PUT - Updates an existing resource 
+Delete - Delete - Deleteds a resource
+// a resource is a representation of an object in the system. For example, a calendar event is a resource.
+---------------------------------------------------------------------------------------------------------------
+
+
+installs needed
+---------------------------------------------------------------------------------------------------------------
+/*
+dotnet add package Microsoft.EntityFrameworkCore // run this command in the terminal to add the Entity Framework Core package to your project. This package provides the core functionality for working with databases using Entity Framework Core.
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite // run this command in the terminal to add the SQLite provider for Entity Framework Core. This package allows you to use SQLite as the database provider for your application.
+dotnet add package Microsoft.EntityFrameworkCore.Design // run this command in the terminal to add the design-time tools for Entity Framework Core. This package provides additional functionality for working with Entity Framework Core during development, such as generating migrations and scaffolding code. 
+dotnet tool install --global dotnet-ef --version 9.0.11
+
+*/
+---------------------------------------------------------------------------------------------------------------
+dotnet ef migrations add InitialCreate
+dotnet ef database update  
+ef migrations remove
+
+
+npm install -g @angular/cli
+ng --version
+ng new calendar-client           or what ever other name you want for the folder 

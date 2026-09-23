@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen();
 // Dependency Injection for TodoContext 
 // builder.Configuration is how you read values out of appsettings.json at runtime.
 builder.Services.AddDbContext<TodoContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))); // UseInMemoryDatabase is a method that configures the context to use an in-memory database. This is useful for testing and development purposes, as it allows you to quickly set up a database without needing to configure a full database server.
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // UseInMemoryDatabase is a method that configures the context to use an in-memory database. This is useful for testing and development purposes, as it allows you to quickly set up a database without needing to configure a full database server.
 
 
 var AApplication = builder.Build();
