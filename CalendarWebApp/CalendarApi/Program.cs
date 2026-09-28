@@ -18,9 +18,36 @@ builder.Services.AddSwaggerGen();
 
 // Dependency Injection for TodoContext 
 // builder.Configuration is how you read values out of appsettings.json at runtime.
-builder.Services.AddDbContext<TodoContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // UseInMemoryDatabase is a method that configures the context to use an in-memory database. This is useful for testing and development purposes, as it allows you to quickly set up a database without needing to configure a full database server.
 
+// Registers TodoContext with the DI container, configured to talk to SQL Server.
+// builder.Configuration.GetConnectionString reads "DefaultConnection" out of
+// appsettings.json at runtime — the server, database name, and auth mode live
+// there, not hardcoded here. Any controller that asks for a TodoContext in its
+// constructor gets one built from this configuration automatically.
+
+// TodoContext talks to SQL Server. Registering it here means controllers
+// can just ask for one instead of creating it themselves.
+
+// Tells the container how to build a TodoContext (using SQL Server) before
+// anything asks for one. Same idea as passing an object into a constructor —
+// just done once, here, instead of at every place that needs a TodoContext.
+builder.Services.AddDbContext<TodoContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// CORS = Cross-Origin Resource Sharing. Browsers block JavaScript from calling
+// an API on a different origin (different port counts as different) unless the
+// server explicitly allows it. Angular runs on :4200, this API on :5220 — different
+// origins — so without this, the browser blocks every request Angular sends here.
+builder.Services.AddCors(options =>
+{
+    // Named policy so it can be applied selectively (rather than globally) below.
+    options.AddPolicy("AllowAngularDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // only this origin may call the API
+              .AllowAnyMethod()   // GET, POST, PUT, DELETE all permitted
+              .AllowAnyHeader();  // allows Content-Type: application/json, etc.
+    });
+});
 
 var AApplication = builder.Build();
 
@@ -37,8 +64,9 @@ if (AApplication.Environment.IsDevelopment())
 
 AApplication.UseHttpsRedirection();
 
-AApplication.UseAuthorization();
+AApplication.UseCors("AllowAngularDev");
 
+AApplication.UseAuthorization();
 AApplication.MapControllers();
 
 AApplication.Run();
